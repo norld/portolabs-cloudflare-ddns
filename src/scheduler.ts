@@ -55,10 +55,16 @@ export class DDNSScheduler {
     try {
       const result = await this.ddnsService.updateDDNS();
       
-      if (result.updated) {
-        console.log(`✅ DNS updated successfully: ${result.previousIP || 'new'} → ${result.ip} at ${new Date().toISOString()}`);
+      if (result.totalUpdated > 0) {
+        console.log(`✅ DNS updated successfully: ${result.totalUpdated}/${result.results.length} records updated to ${result.ip} at ${new Date().toISOString()}`);
+        
+        result.results.forEach(record => {
+          if (record.updated) {
+            console.log(`   ${record.recordName}: ${record.previousIP || 'new'} → ${record.ip}`);
+          }
+        });
       } else {
-        console.log(`ℹ️  No update needed. IP remains: ${result.ip} at ${new Date().toISOString()}`);
+        console.log(`ℹ️  No update needed. IP remains: ${result.ip} for all ${result.results.length} records at ${new Date().toISOString()}`);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';

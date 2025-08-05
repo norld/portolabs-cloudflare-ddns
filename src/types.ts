@@ -1,9 +1,12 @@
 export interface DDNSConfig {
   apiToken: string;
   domain: string;
-  recordName: string;
+  recordNames: string[];
   ttl?: number;
   checkInterval?: number;
+  newSubdomainPattern?: string;
+  autoDiscoverLocal?: boolean;
+  dnsPattern?: string;
 }
 
 export interface CloudflareZoneResponse {
@@ -43,4 +46,11 @@ export interface UpdateResult {
   updated: boolean;
   ip: string;
   previousIP?: string;
+  recordName: string;
+}
+
+export interface MultiUpdateResult {
+  ip: string;
+  results: UpdateResult[];
+  totalUpdated: number;
 }
